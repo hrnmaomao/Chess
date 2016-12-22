@@ -8,10 +8,12 @@
  *
  * @author SyBye8898
  */
-public abstract class Player {
-    public boolean[][][]validMove=new boolean[16][8][8];
-    public int playerNum;
+public class Piece {
     
-    //public abstract void move();
+    public static enum pieces{
+        PAWN, ROOK, KNIGHT, BISHOP, QUEEN, KING
+    }
+    
+    
     
 }

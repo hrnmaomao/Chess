@@ -8,10 +8,11 @@
  *
  * @author SyBye8898
  */
-public abstract class Player {
-    public boolean[][][]validMove=new boolean[16][8][8];
-    public int playerNum;
+public class Human extends Player{
     
-    //public abstract void move();
+    //@Override
+    public void move(int n,int x,int y,Game g){
+        g.Move(p, n, x, y);
+    }
     
 }
