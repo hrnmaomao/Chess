@@ -15,7 +15,7 @@ public class AI extends Player{
     public ArrayList AI(Board b,int n,Game g){
         if(n==0){
             ArrayList<Integer>tree=new ArrayList<>();
-            tree.add(b.findBoardValue(p));
+            tree.add(b.findBoardValue(playerNum));
         }else{
             ArrayList<ArrayList>tree=new ArrayList<>();
             for(int i=-4;i<=4;i++){

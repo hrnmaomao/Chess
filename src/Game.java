@@ -10,21 +10,25 @@
  */
 public class Game {
     
-    Board board = new Board();
-    Board TempBoard = new Board();
+    Board b ;
+    Board tempBoard;
     private Player player1,player2;
-    
-    public void Move(Player p,int n,int x,int y){//n is piece number
-        board.analyzeBoard(p);
-        if(p.validMove[n][x][y]){
+    public Game(boolean t,int n){
+        b= new Board(t,n);
+                tempBoard= new Board(t,n);
+    }
+    public boolean[][][]validMove=new boolean[16][8][8];
+    public void Move(int pNum,int n,int x,int y){//n is piece number
+        b.analyzeBoard(pNum);
+        if(validMove[n][x][y]){
             for(int i=0;i<8;i++){
                 for(int j=0;j<8;j++){
-                    if(board[p.playerNum][i][j]==n){
-                        board[p.playerNum][i][j]=0;
+                    if(b.board[pNum][i][j]==n){
+                        b.board[pNum][i][j]=0;
                     }
                 }
             }
-            board[p.playerNum][x][y]=n;
+            board[pNum][x][y]=n;
         }
     }
 }
