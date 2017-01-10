@@ -71,7 +71,6 @@ public class Board {
         
         //use number of pieces on the board to determine stage
         
-        double value = 0;
         double combinationValue = 0;
         double totalPieceValues = 0;
         
@@ -83,7 +82,7 @@ public class Board {
             return -1000000;
         }
         
-        
+        double value = 0;
         for(int i = 0; i < 6; i++){
             for(int j = 0; j < 2; j++){
                 for(int k = 0; k < pieceArray[i][j]; k++){
@@ -108,19 +107,46 @@ public class Board {
         }
         //78 total
         if(value > 62){//begin game
+            int midSquares = 0;
+            for(int i = 3; i <= 4; i++){
+                for(int j = 3; j <= 4; j++){
+                    for(int a = -2; a <= 2; a += 4){
+                        for(int b = -1; b <= 1; b += 2){
+                            if(board[i+a][j+b][0] == Piece.KNIGHT){
+                                midSquares--;
+                            }if(board[i+b][j+a][0] == Piece.KNIGHT){
+                                midSquares--;
+                            }if(board[i+a][j+b][1] == Piece.KNIGHT){
+                                midSquares++;
+                            }if(board[i+b][j+a][1] == Piece.KNIGHT){
+                                midSquares++;
+                            }
+                            
+                            if(board[i+1][j][0] == Piece.PAWN){//using i as y //this also changes depending if the board array gets swapped
+                                midSquares--;
+                            }if(board[i-1][j][1] == Piece.PAWN){
+                                midSquares++;
+                            }
+                            //is there a variable contianing if the pawn can move two squares? that is necessary here
+                        }
+                    }
+                }
+            }
             
-        //B, R, Q better in open positions, worse in closed
-        //N better in closed, bad on corners and edges    
-            //less pieces / edges surrounding B, R, Q, value ^
-            //opp for N except only w/ pieces
+            //method to check if piece is on the edge, negative value
+            //not sure if should be used 'cause it runs through entire board-not worth it
+            //B, R, Q, N better in open
             
-            //a check for if surrounding pieces exist, if they are friendly / not
+            //B > R
         }else if(value > 24){//midgame
-            //
+            //R >= B
         }else{//endgame
-            
+            //R >> B
+            //less pieces / edges surrounding B, R, Q, value ^ || N down
+            //passed pawns //player w/ pawns closest to other sidre
+            //doubled pawns = weak (throughout whole game)
             if((pieceArray[3][0] == 2)&&(pieceArray[4][1] == 1)){
-                value -= 1;//some value :/
+                value -= 1;//some value :/ //this is if black has two rooks, white has one queen
             }else if((pieceArray[3][1] == 2)&&(pieceArray[4][0] == 1)){
                 value += 1;//some value :/
             }
