@@ -67,58 +67,72 @@ public class Board {
         }
     }
     
-    public double findBoardValue(int stage){
+    public double findBoardValue(){
+        
+        //use number of pieces on the board to determine stage
         
         double value = 0;
         double combinationValue = 0;
-        double pieceValues = 0;
+        double totalPieceValues = 0;
         
-        boolean whiteKing = false;
-        boolean blackKing = false;
+        int[][] pieceArray = cloneArray(findNumberPieces());
         
-        for(int p = 0; p < 2; p++){
-            for(int i = 0; i < 8; i++){
-                for(int j = 0; j < 8; j++){
-                    if(board[i][j][p] != null){
-                        if(board[i][j][p] == Piece.KING){
-                            if(p == 0){
-                                whiteKing = true;
-                            }else{
-                                blackKing = true;
-                            }
-                        }else{
-                            pieceValues += findPieceValue(board[i][j][p]);
-                        }
+        if(pieceArray[5][0] == 0){
+            return 1000000;
+        }else if (pieceArray[5][1] == 0){
+            return -1000000;
+        }
+        
+        
+        for(int i = 0; i < 6; i++){
+            for(int j = 0; j < 2; j++){
+                for(int k = 0; k < pieceArray[i][j]; k++){
+                    int side = j == 0? -1:+1;
+                    int pieceValue = 0;
+                    if(i == 0){
+                        pieceValue = 1;                  
+                    }else if(i == 1){
+                        pieceValue = 3;
+                    }else if(i == 2){
+                        pieceValue = 3;
+                    }else if(i == 3){
+                        pieceValue = 5;
+                    }else if(i == 4){
+                        pieceValue = 9;
                     }
+                    
+                    totalPieceValues += pieceValue;
+                    value += side * pieceValue;
                 }
             }
         }
-        if(!whiteKing){
-            pieceValues = -1000000;
-        }else if(!blackKing){
-            pieceValues = +1000000;
-        }
-        
-        if(stage == 0){//begin game
+        //78 total
+        if(value > 62){//begin game
+            
         //B, R, Q better in open positions, worse in closed
         //N better in closed, bad on corners and edges    
             //less pieces / edges surrounding B, R, Q, value ^
             //opp for N except only w/ pieces
             
             //a check for if surrounding pieces exist, if they are friendly / not
-        }else if(stage == 1){//midgame
+        }else if(value > 24){//midgame
             //
-        }else if(stage == 2){//endgame
+        }else{//endgame
+            
+            if((pieceArray[3][0] == 2)&&(pieceArray[4][1] == 1)){
+                value -= 1;//some value :/
+            }else if((pieceArray[3][1] == 2)&&(pieceArray[4][0] == 1)){
+                value += 1;//some value :/
+            }
             
         }
-        
         
         return value;
         }
     
-    public int surroundingPieces(int a, int b, int p, Piece piece){
+    public boolean onEdge(int a, int b){
         
-        boolean edge;
+        boolean edge = false;
         for(int i = -1; i <= 1; i++){
             for(int j = -1; j <= 1; j++){
                 if((a+i < 0)||(a+i >= 8)||(b+i < 0)||(b+i >= 8)){
@@ -126,66 +140,42 @@ public class Board {
                 }
             }
         }
-        
+        return edge;
     }
     
-    public double findPieceValue(Piece piece, int stage){
-        double value = 0;
-        if(stage == 0){
-            if(piece == Piece.PAWN){
-                value = 1;
-            }else if(piece == Piece.KNIGHT){
-                value = 3;
-            }else if(piece == Piece.BISHOP){
-                value = 3;
-            }else if(piece == Piece.ROOK){
-                value = 5;
-            }else if(piece == Piece.QUEEN){
-                value = 9;
-            }
-        }else if(stage == 1){
-            if(piece == Piece.PAWN){
-                value = 1;
-            }else if(piece == Piece.KNIGHT){
-                value = 3.5;
-            }else if(piece == Piece.BISHOP){
-                value = 3.5;
-            }else if(piece == Piece.ROOK){
-                value = 5.25;
-            }else if(piece == Piece.QUEEN){
-                value = 10;
-            }
-        }else if(stage == 2){//endgame idk
-            if(piece == Piece.PAWN){
-                value = 1.5;
-            }else if(piece == Piece.KNIGHT){
-                value = 2.5;
-            }else if(piece == Piece.BISHOP){
-                value = 3.5;
-            }else if(piece == Piece.ROOK){
-                value = 6;
-            }else if(piece == Piece.QUEEN){
-                value = 8.5;
+    public int[][] findNumberPieces(){
+        int[][] pieceArray = new int[6][2];
+        for(int p = 0; p < 2; p++){
+            for(int a = 0; a < 8; a++){
+                for(int b = 0; b < 8; b++){
+                    if(board[a][b][p] == Piece.PAWN){
+                        pieceArray[0][p]++;
+                    }else if(board[a][b][p] == Piece.KNIGHT){
+                        pieceArray[1][p]++;
+                    }else if(board[a][b][p] == Piece.BISHOP){
+                        pieceArray[2][p]++;
+                    }else if(board[a][b][p] == Piece.ROOK){
+                        pieceArray[3][p]++;
+                    }else if(board[a][b][p] == Piece.QUEEN){
+                        pieceArray[4][p]++;
+                    }else if(board[a][b][p] == Piece.KING){
+                        pieceArray[5][p]++;
+                    }
+                }
             }
         }
-        
-        return value;
+        return pieceArray;
     }
     
+    public int[][] cloneArray(int[][] array){
+        int[][] returnArray = new int[array.length][array[0].length];
+        
+        for(int i = 0; i < array.length; i++){
+            for(int j = 0; j < array[0].length; j++){
+                returnArray[i][j] = array[i][j];
+            }
+        }
+        return returnArray;
+    }
+   
 }
-    
-        /*Hans Berliner:: P = 1, N = 3.2, B = 3.33, R = 5.1, Q = 8.8
-        B, R, Q better in open positions, worse in closed
-        N better in closed, bad on corners and edges
-        doubled pawns
-        
-        endgame: P, R ^^, B^
-        N down, Q slightly down
-        
-        mid : Q == RR 
-        end : RR > Q
-        
-        mid : RPP < BB||BN|==NN
-        end
-        */
-
