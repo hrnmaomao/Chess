@@ -73,6 +73,7 @@ public class Board {
         
         double combinationValue = 0;
         double totalPieceValues = 0;
+        double totalValue = 0;
         
         int[][] pieceArray = cloneArray(findNumberPieces());
         
@@ -105,9 +106,11 @@ public class Board {
                 }
             }
         }
+        
+        int midSquares = 0;
         //78 total
         if(value > 62){//begin game
-            int midSquares = 0;
+            
             for(int i = 3; i <= 4; i++){
                 for(int j = 3; j <= 4; j++){
                     for(int a = -2; a <= 2; a += 4){
@@ -139,10 +142,13 @@ public class Board {
             
             //B > R
         }else if(value > 24){//midgame
+            
+            //if there is a simple way to determine whether or not the position is open or closed, that would be useful
+            
             //R >= B
         }else{//endgame
             //R >> B
-            //less pieces / edges surrounding B, R, Q, value ^ || N down
+            //N bad w/ edges and corners
             //passed pawns //player w/ pawns closest to other sidre
             //doubled pawns = weak (throughout whole game)
             if((pieceArray[3][0] == 2)&&(pieceArray[4][1] == 1)){
@@ -151,9 +157,23 @@ public class Board {
                 value += 1;//some value :/
             }
             
+            /*
+            King & Rook can checkmate
+            
+            K+B // K+N == tie
+            
+            K+P = maybe checkmate
+            
+            K+2B can checkmate
+            
+            K+B+N can
+            K+2N (if other is stupid)
+            K == tie
+            */
+            
         }
-        
-        return value;
+        totalValue = totalPieceValues + midSquares + combinationValue;
+        return totalValue;
         }
     
     public boolean onEdge(int a, int b){
